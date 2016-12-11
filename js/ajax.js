@@ -4,12 +4,13 @@ function ajaxGet(url, callback) {
 
     //La requête est asynchrome lorsque le 3ième paramètre vaut true ou est absent
     req.open("GET", url);
-    req.setRequestHeader("Access-Control-Allow-Origin","*");
+  // req.setRequestHeader("Access-Control-Allow-Origin","*");
     //Gestion de l'événement indique la fin de la requête
     req.addEventListener("load", function () {
         if (req.status >= 200 && req.status <= 400) {
             // Le serveur à réussi à traiter la requète
             // On affiche alors la réponse reçu par la requète
+            console.log(req);
             callback(req.responseText);
         } else {
             //On affiche des infos sur l'échec du traitement de la requète
