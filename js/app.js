@@ -5,13 +5,10 @@
 
 var formElt = document.querySelector('form'),
     resultElt = document.getElementById('result'),
+    resultSimiElt = document.getElementById('result-similaire'),
     zSection = document.querySelector('section'),
     domElement = "",
     firstDomElement = "";
-
-var nbPrincipale = 7,
-    nbSecondaire = 8,
-    nbFinal = nbPrincipale + nbSecondaire;
 
 function createElement(elem) {
     elem.forEach(function (element, key) {
@@ -50,10 +47,6 @@ function createElement(elem) {
     });
 }
 
-/**
- * return preformated block of content
- * @param  {object}
- */
 function generateBlock(search) {
     var elements = [{
         'type': 'div',
@@ -86,7 +79,7 @@ function generateBlockSimilaire(search) {
         'type': 'div',
         'name': 'divSimilaire',
         'class': 'show-similaire',
-        'append': zSection
+        'append': resultSimiElt
     }, {
         'type': 'a',
         'name': 'titleA',
@@ -104,7 +97,7 @@ formElt.addEventListener('submit', function (e) {
     var searchContent = {};
     // Request Ajax
     // Request done in JSON format with ~10 result & params 
-    ajaxGet('https://fr.wikipedia.org/w/api.php?action=query&format=json&generator=search&origin=*&prop=extracts&exchars=500&exintro=true&explaintext=false&gsrlimit=15&gsrsearch=' + searchElt + '&exlimit=' + nbFinal, function (response) {
+    ajaxGet('https://fr.wikipedia.org/w/api.php?action=query&format=json&generator=search&origin=*&prop=extracts&exchars=500&exintro=true&explaintext=false&gsrlimit=15&exlimit=15&gsrsearch=' + searchElt, function (response) {
         var result = JSON.parse(response).query.pages;
         console.log(result);
 
@@ -117,12 +110,8 @@ formElt.addEventListener('submit', function (e) {
                 pageid: attr.pageid,
                 index: attr.index
             };
-            /*  // EN COURS --
-            *   // TODO : Si plus de 7 résultats >
-            *   Effacer les résultats dont l'index est supérieur à 7
-            *   Les affichés en bas de pages ( FAIT sans mise en page )
-            */
-            if (searchContent.index > 7) {
+
+            if (searchContent.index >= 7) {
                 generateBlockSimilaire(searchContent);
             } else {
                 generateBlock(searchContent);
@@ -136,7 +125,9 @@ formElt.addEventListener('submit', function (e) {
     } else {
         searchNOk();
     }
-    resultElt.innerHTML = ""; // Delete result when new Search
+    // Delete result when new Search
+    resultElt.innerHTML = "";
+    resultSimiElt.innerHTML = "";
 });
 
 /**
@@ -165,7 +156,6 @@ function searchOk() {
     setTimeout(function () {
         zSection.removeChild(a);
     }, 2000);
-
 };
 
 function searchNOk() {

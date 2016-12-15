@@ -1,6 +1,6 @@
 body {
     margin: auto;
-    font-size: 14px;
+    font-size: 16px;
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -75,20 +75,43 @@ form {
 }
 
 .show-content a {
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: 600;
     list-style-type: none;
 }
 
 .show-content li {
-    margin-top: 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
     color: #006621;
     list-style-type: none;
 }
 
 #extractSpan {
-    font-size: 13px;
+    font-size: 16px;
 }
 
+/*
+* Resultats Similaire
+*/
+
+#result-similaire {
+    margin-left: 250px;
+    margin-top: 50px;
+    padding-top: 50px;
+    max-width: 720px;
+    padding-bottom: 50px;
+    columns: 2;
+}
+
+#divSimilaire {
+    font-size: 18px;
+    line-height: 1.6em;
+}
+
+#result-p {
+    color: blue;
+}
 
 /*
 * Msg OK / NOK
