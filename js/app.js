@@ -115,7 +115,6 @@ formElt.addEventListener('submit', function (e) {
 
             if (searchContent.index >= 7) {
                 generateBlockSimilaire(searchContent);
-                resultP.style.display = "block";
             } else {
                 generateBlock(searchContent);
             };
