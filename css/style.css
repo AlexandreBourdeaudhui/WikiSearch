@@ -1,8 +1,13 @@
 body {
     margin: auto;
-    font-family:sans-serif;
     font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
 }
+
+
+/*
+* Header
+*/
 
 header #main {
     display: flex;
@@ -14,39 +19,63 @@ header #main {
     position: relative;
     margin-left: 20px;
     margin-right: 80px;
-    padding-top: 20px;
+    margin-top: 25px;
     font-size: 26px;
-    font-weight: 900;
+    font-weight: 600;
+    text-shadow: 3px 5px 5px #C1C2D2;
     cursor: default;
 }
 
 header {
-    background-color: lightgray;
-    height: 75px;
-    border-bottom: 2px solid red;
+    background-color: #F7F7F7;
+    height: 100px;
+    border-bottom: 1px solid red;
 }
 
-#search {
-    width: 705px;
-    height: 32px;
-    padding-left: 15px;
-    margin-top: 15px;
-    box-shadow: 2px 3px 10px black;
+input[type=text] {
+    width: 200px;
+    height: 25px;
+    padding-left: 10px;
+    margin-top: 30px;
+    box-shadow: 1px 1px 1px black;
+    transition: width 0.5s ease;
 }
+
+input[type=text]:focus {
+    width: 700px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+#searchText {
+    margin-top: 12px;
+    margin-left: 10px;
+    font-size: .9em;
+    display: none;
+    /*transition: opacity 2.8s;*/
+}
+
+
+/*
+* Résultat
+*/
 
 #result {
     max-width: 720px;
     margin-left: 250px;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .show-content {
     text-align: justify;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
 }
 
 .show-content a {
-    font-size: 22px;
+    font-size: 18px;
     list-style-type: none;
 }
 
@@ -54,4 +83,35 @@ header {
     margin-top: 5px;
     color: #006621;
     list-style-type: none;
+}
+
+#extractSpan {
+    font-size: 13px;
+}
+
+
+/*
+* Msg OK / NOK
+*/
+
+.show-msg-ok {
+    background-color: green;
+    color: whitesmoke;
+    text-shadow: 2px 2px 7px black;
+    padding-left: 250px;
+    padding-top: 5px;
+    height: 25px;
+    font-weight: 100;
+    opacity: .8;
+}
+
+.show-msg-nok {
+    background-color: red;
+    color: whitesmoke;
+    text-shadow: 2px 2px 7px black;
+    padding-left: 250px;
+    padding-top: 5px;
+    height: 25px;
+    font-weight: 100;
+    opacity: .8;
 }
