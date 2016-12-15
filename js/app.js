@@ -10,6 +10,8 @@ var formElt = document.querySelector('form'),
     domElement = "",
     firstDomElement = "";
 
+var resultP = document.getElementById('result-p');
+
 function createElement(elem) {
     elem.forEach(function (element, key) {
         Object.keys(element).map(function (elemKey, index) {
@@ -75,7 +77,7 @@ function generateBlock(search) {
 };
 
 function generateBlockSimilaire(search) {
-    var elementSimilaire = [{
+    var elements = [{
         'type': 'div',
         'name': 'divSimilaire',
         'class': 'show-similaire',
@@ -87,8 +89,8 @@ function generateBlockSimilaire(search) {
         'textContent': search.title,
         'append': 'auto'
     }];
-
-    createElement(elementSimilaire);
+    
+    createElement(elements);
 };
 
 formElt.addEventListener('submit', function (e) {
@@ -113,9 +115,10 @@ formElt.addEventListener('submit', function (e) {
 
             if (searchContent.index >= 7) {
                 generateBlockSimilaire(searchContent);
+                resultP.style.display = "block";
             } else {
                 generateBlock(searchContent);
-            }
+            };
         };
     });
 

@@ -34,7 +34,7 @@ header {
 
 input[type=text] {
     width: 200px;
-    height: 25px;
+    height: 30px;
     padding-left: 10px;
     margin-top: 30px;
     box-shadow: 1px 1px 1px black;
@@ -51,7 +51,7 @@ form {
 }
 
 #searchText {
-    margin-top: 12px;
+    margin-top: 8px;
     margin-left: 10px;
     font-size: .9em;
     display: none;
@@ -107,10 +107,6 @@ form {
 #divSimilaire {
     font-size: 18px;
     line-height: 1.6em;
-}
-
-#result-p {
-    color: blue;
 }
 
 /*
