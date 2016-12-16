@@ -42,7 +42,7 @@ input[type=text] {
 }
 
 input[type=text]:focus {
-    width: 700px;
+    width: 960px;
 }
 
 form {
@@ -64,9 +64,9 @@ form {
 */
 
 #result {
-    max-width: 720px;
+    max-width: 960px;
     margin-left: 250px;
-    margin-top: 20px;
+    margin-top: 50px;
 }
 
 .show-content {
@@ -97,17 +97,26 @@ form {
 
 #result-similaire {
     margin-left: 250px;
-    margin-top: 50px;
-    padding-top: 50px;
-    max-width: 720px;
+    max-width: 960px;
     padding-bottom: 50px;
     columns: 2;
+    text-align: cente
 }
 
 #divSimilaire {
     font-size: 18px;
     line-height: 1.6em;
 }
+
+#result-msg {
+    margin-left: 250px;
+    margin-top: 100px;
+    margin-bottom: 30px;
+    font-size: 17px;
+    font-weight: 600;
+    color: black;
+}
+
 
 /*
 * Msg OK / NOK

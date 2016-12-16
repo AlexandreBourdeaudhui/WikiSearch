@@ -6,13 +6,13 @@
 var formElt = document.querySelector('form'),
     resultElt = document.getElementById('result'),
     resultSimiElt = document.getElementById('result-similaire'),
+    resultMsg = document.getElementById('result-msg'),
     zSection = document.querySelector('section'),
     domElement = "",
     firstDomElement = "";
 
-var resultP = document.getElementById('result-p');
-
 function createElement(elem) {
+    'use strict';
     elem.forEach(function (element, key) {
         Object.keys(element).map(function (elemKey, index) {
             var value = element[elemKey];
@@ -50,6 +50,7 @@ function createElement(elem) {
 }
 
 function generateBlock(search) {
+    'use strict';
     var elements = [{
         'type': 'div',
         'name': 'divContainer',
@@ -74,9 +75,10 @@ function generateBlock(search) {
     }];
 
     createElement(elements);
-};
+}
 
 function generateBlockSimilaire(search) {
+    'use strict';
     var elements = [{
         'type': 'div',
         'name': 'divSimilaire',
@@ -89,19 +91,21 @@ function generateBlockSimilaire(search) {
         'textContent': search.title,
         'append': 'auto'
     }];
-    
+
     createElement(elements);
-};
+}
 
 formElt.addEventListener('submit', function (e) {
+    'use strict';
     e.preventDefault();
-    var searchElt = formElt.elements.search.value;
-    var searchContent = {};
+    var searchElt = formElt.elements.search.value,
+        searchContent = {};
     // Request Ajax
     // Request done in JSON format with ~10 result & params 
     ajaxGet('https://fr.wikipedia.org/w/api.php?action=query&format=json&generator=search&origin=*&prop=extracts&exchars=500&exintro=true&explaintext=false&gsrlimit=15&exlimit=15&gsrsearch=' + searchElt, function (response) {
         var result = JSON.parse(response).query.pages;
-        console.log(result);
+        
+        //console.log(result);
 
         for (var x in result) {
             var attr = result[x];
@@ -113,19 +117,30 @@ formElt.addEventListener('submit', function (e) {
                 index: attr.index
             };
 
+            if (searchContent.index === 7) {
+                var pMsg = document.createElement('span')
+                pMsg.textContent = "Résultats similaires à votre recherche : ";
+                resultMsg.appendChild(pMsg);
+            }
+            
+            /*if (searchContent.title === undefined) {
+                searchNOk();
+            }*/
+            
             if (searchContent.index >= 7) {
                 generateBlockSimilaire(searchContent);
             } else {
                 generateBlock(searchContent);
-            };
+            }
+
         };
     });
 
     // TODO : Si la recherche ne donne aucun résultat > SearchNOK
     if (searchElt) {
         searchOk();
-    } else {
-        searchNOk();
+    } else {         
+        searchNOk();     
     }
     // Delete result when new Search
     resultElt.innerHTML = "";
