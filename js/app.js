@@ -3,11 +3,10 @@
 - Voir pour des URLs plutôt que des ID
 */
 
-var formElt = document.querySelector('form'),
+var formElt = document.querySelector('.formElt'),
     resultElt = document.getElementById('result'),
     resultSimiElt = document.getElementById('result-similaire'),
     resultMsg = document.getElementById('result-msg'),
-    zSection = document.querySelector('section'),
     domElement = "",
     firstDomElement = "";
 
@@ -48,108 +47,106 @@ function createElement(elem) {
     });
 }
 
-function generateBlock(search) {
-    var elements = [{
-        'type': 'div',
-        'name': 'divContainer',
-        'class': 'show-content',
-        'append': resultElt
+function generateBlock(searchs = []) {
+    searchs.map((search, index) => {
+        var elements = [{
+            'type': 'div',
+            'name': 'divContainer',
+            'class': 'show-content',
+            'append': resultElt
     }, {
-        'type': 'a',
-        'name': 'titleA',
-        'href': 'https://fr.wikipedia.org/?curid=' + search.pageid,
-        'textContent': search.title,
-        'append': 'auto'
+            'type': 'a',
+            'name': 'titleA',
+            'href': `https://fr.wikipedia.org/?curid=${search.pageid}`,
+            'textContent': `${search.title}`,
+            'append': 'auto'
     }, {
-        'type': 'li',
-        'name': 'pageidLi',
-        'textContent': 'https://fr.wikipedia.org/wiki/' + search.title,
-        'append': 'auto'
+            'type': 'li',
+            'name': 'pageidLi',
+            'textContent': `https://fr.wikipedia.org/wiki/${search.title}`,
+            'append': 'auto'
     }, {
-        'type': 'span',
-        'name': 'extractSpan',
-        'innerHTML': search.extract,
-        'append': 'auto'
+            'type': 'span',
+            'name': 'extractSpan',
+            'innerHTML': `${search.extract}`,
+            'append': 'auto'
     }];
-
-    createElement(elements);
-}
-
-function generateBlockSimilaire(search) {
-    var elements = [{
-        'type': 'div',
-        'name': 'divSimilaire',
-        'class': 'show-similaire',
-        'append': resultSimiElt
-    }, {
-        'type': 'a',
-        'name': 'titleA',
-        'href': 'https://fr.wikipedia.org/?curid=' + search.pageid,
-        'textContent': search.title,
-        'append': 'auto'
-    }];
-
-    createElement(elements);
-}
-
-formElt.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var searchElt = formElt.elements.search.value;
-    var searchContent = {};
-    // Request Ajax
-    // Request done in JSON format with ~10 result & params 
-    ajaxGet('https://fr.wikipedia.org/w/api.php?action=query&format=json&generator=search&origin=*&prop=extracts&exchars=500&exintro=true&explaintext=false&gsrlimit=15&exlimit=15&gsrsearch=' + searchElt, function (response) {
-        var result = JSON.parse(response).query.pages;
-
-        //console.log(result);
-
-        for (var x in result) {
-            var attr = result[x];
-
-            searchContent = {
-                title: attr.title,
-                extract: attr.extract,
-                pageid: attr.pageid,
-                index: attr.index
-            };
-            console.log(searchContent.index);
-
-            /*if (result == undefined) {
-                searchNOk();
-            }*/
-
-            if (searchContent.index >= 7) {
-                generateBlockSimilaire(searchContent);
-                resultMsg.style.display = "block";
-            } else {
-                generateBlock(searchContent);
-                resultMsg.style.display = "none";
-            }
-
-        };
+        createElement(elements);
     });
+}
 
-    // TODO : Si la recherche ne donne aucun résultat > SearchNOK
-    if (searchElt) {
-        searchOk();
-    } else {
-        searchNOk();
-    }
-    // Delete result when new Search
+function generateBlockSimilaire(searchs = []) {
+    searchs.map((search, index) => {
+        var elements = [{
+            'type': 'div',
+            'name': 'divSimilaire',
+            'class': 'show-similaire',
+            'append': resultSimiElt
+    }, {
+            'type': 'a',
+            'name': 'titleA',
+            'href': `https://fr.wikipedia.org/?curid=${search.pageid}`,
+            'textContent': `${search.title}`,
+            'append': 'auto'
+    }];
+        createElement(elements);
+    });
+}
+
+var searches = [];
+
+function addSearch(e) {
+    e.preventDefault();
+    var searchElt = this.querySelector('[name=search]').value;
+    ajaxGet('https://fr.wikipedia.org/w/api.php?action=query&format=json&generator=search&origin=*&prop=extracts&exchars=500&exintro=true&explaintext=false&gsrlimit=15&exlimit=15&gsrsearch=' + searchElt, searchResult);
+}
+
+function searchResult(response) {
+    var result = JSON.parse(response).query.pages;
+    if (result === 'undefined') { console.log('coucou'); }
+    var searchContent = {};
+
+    for (var x in result) {
+        var attr = result[x];
+        searchContent = {
+            title: attr.title,
+            extract: attr.extract,
+            pageid: attr.pageid,
+            index: attr.index
+        };
+        searches.push(searchContent);
+    };
+
+    searches.sort(function (firstIndex, secondIndex) {
+        if (firstIndex.index > secondIndex.index) {
+            return 1;
+        } else {
+            return -1;
+        }
+    });
     resultElt.innerHTML = "";
     resultSimiElt.innerHTML = "";
-});
 
-/**
- * return preformated url
- * @id  {integer}
- * @return url {string} 
- */
+    var nbIndex = searches.filter(search => (search.index <= 7));
+    var nbIndexMax = searches.filter(search => (search.index > 7));
+    
+    console.table(nbIndex);
+    console.table(nbIndexMax);
 
-function getUrl(id) {
+    if (nbIndexMax == false) {
+         resultMsg.style.display = "none";
+    } else {
+         resultMsg.style.display = "block";
+    }
 
+    generateBlock(nbIndex, resultElt);
+    generateBlockSimilaire(nbIndexMax, resultSimiElt);
+
+    // Nouvelle recherche
+    searches.splice(0, 15);
 };
 
+formElt.addEventListener('submit', addSearch);
 formElt.addEventListener('keyup', function (e) {
     var displayText = document.getElementById('searchText');
     displayText.style.display = "block";
@@ -157,23 +154,3 @@ formElt.addEventListener('keyup', function (e) {
         displayText.style.display = "none";
     }
 });
-
-function searchOk() {
-    var a = document.createElement('div');
-    a.classList.add("show-msg-ok");
-    a.textContent = "Votre recherche a été effectuée.";
-    zSection.insertBefore(a, resultElt);
-    setTimeout(function () {
-        zSection.removeChild(a);
-    }, 2000);
-};
-
-function searchNOk() {
-    var a = document.createElement('div');
-    a.classList.add("show-msg-nok");
-    a.textContent = "Votre recherche n'a donné aucun résultat.";
-    zSection.insertBefore(a, resultElt);
-    setTimeout(function () {
-        zSection.removeChild(a);
-    }, 2000);
-}
