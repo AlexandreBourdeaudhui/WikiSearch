@@ -115,7 +115,7 @@ form {
     font-size: 17px;
     font-weight: 600;
     color: black;
-    display: none;
+    /*display: none; */
 }
 
 
@@ -132,6 +132,7 @@ form {
     height: 25px;
     font-weight: 100;
     opacity: .8;
+    contet: "Blabla";
 }
 
 .show-msg-nok {

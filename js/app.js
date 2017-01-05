@@ -6,11 +6,11 @@
 var formElt = document.querySelector('.formElt'),
     resultElt = document.getElementById('result'),
     resultSimiElt = document.getElementById('result-similaire'),
-    resultMsg = document.getElementById('result-msg'),
-    domElement = "",
-    firstDomElement = "";
+    resultMsg = document.getElementById('result-msg');
 
 function createElement(elem) {
+    var domElement = "";
+    var firstDomElement = "";
     elem.forEach(function (element, key) {
         Object.keys(element).map(function (elemKey, index) {
             var value = element[elemKey];
@@ -98,12 +98,16 @@ var searches = [];
 function addSearch(e) {
     e.preventDefault();
     var searchElt = this.querySelector('[name=search]').value;
-    ajaxGet('https://fr.wikipedia.org/w/api.php?action=query&format=json&generator=search&origin=*&prop=extracts&exchars=500&exintro=true&explaintext=false&gsrlimit=15&exlimit=15&gsrsearch=' + searchElt, searchResult);
+    if (searchElt) {
+        ajaxGet('https://fr.wikipedia.org/w/api.php?action=query&format=json&generator=search&origin=*&prop=extracts&exchars=500&exintro=true&explaintext=false&gsrlimit=15&exlimit=15&gsrsearch=' + searchElt, searchResult);
+    } else {
+        searchNOk();
+    }
 }
+
 
 function searchResult(response) {
     var result = JSON.parse(response).query.pages;
-    if (result === 'undefined') { console.log('coucou'); }
     var searchContent = {};
 
     for (var x in result) {
@@ -127,17 +131,21 @@ function searchResult(response) {
     resultElt.innerHTML = "";
     resultSimiElt.innerHTML = "";
 
+
     var nbIndex = searches.filter(search => (search.index <= 7));
     var nbIndexMax = searches.filter(search => (search.index > 7));
-    
-    console.table(nbIndex);
-    console.table(nbIndexMax);
+
+    //console.table(nbIndex);
+    //console.table(nbIndexMax);
 
     if (nbIndexMax == false) {
-         resultMsg.style.display = "none";
+        resultMsg.innerHTML = "";
     } else {
-         resultMsg.style.display = "block";
+        resultMsg.innerHTML = "<span>Résultats similaires à votre recherche : </span>";
     }
+
+    var searchSome = searches.every(search => search >= 1 ? searchNOk() : searchOk());
+    //console.log(searchSome);
 
     generateBlock(nbIndex, resultElt);
     generateBlockSimilaire(nbIndexMax, resultSimiElt);
@@ -154,3 +162,31 @@ formElt.addEventListener('keyup', function (e) {
         displayText.style.display = "none";
     }
 });
+
+
+/* ___________________________________ */
+
+var zSection = document.querySelector('section');
+var a = document.getElementById('etat-result');
+
+function searchOk() {
+    var a = document.getElementById('etat-result');
+    a.classList.add("show-msg-ok");
+    a.textContent = "Votre recherche a été effectuée.";
+    zSection.insertBefore(a, resultElt);
+    setTimeout(function () {
+        a.classList.remove('show-msg-ok');
+        a.textContent = "";
+    }, 2000);
+};
+
+function searchNOk() {
+    var a = document.getElementById('etat-result');
+    a.classList.add("show-msg-nok");
+    a.textContent = "Votre recherche n'a donné aucun résultat.";
+    zSection.insertBefore(a, resultElt);
+    setTimeout(function () {
+        a.classList.remove('show-msg-nok');
+        a.textContent = "";
+    }, 2000);
+}
