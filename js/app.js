@@ -108,6 +108,11 @@ function addSearch(e) {
 
 function searchResult(response) {
     var result = JSON.parse(response).query.pages;
+    console.log(result);
+    if (typeof (result) === 'undefined') {
+        console.log('Hello');
+    }
+
     var searchContent = {};
 
     for (var x in result) {
